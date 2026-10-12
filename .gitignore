@@ -1,0 +1,87 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+!**/.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+
+# IDEs and operating systems
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build, test, and local databases
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.tsbuildinfo
+.vite/
+coverage/
+*.sqlite
+*.sqlite3
+*.db
+
+# Generated evaluation output and logs
+evaluation/results/*
+!evaluation/results/.gitkeep
+*.log
+
+# Keep safe synthetic telemetry fixtures that the backend and tests use
+backend/data/raw/*
+!backend/data/raw/.gitkeep
+!backend/data/raw/README.md
+!backend/data/raw/*.json
+!backend/data/raw/incidents/
+backend/data/raw/incidents/*
+!backend/data/raw/incidents/*.json
+
+# Generated normalized data
+backend/data/normalized/*
+!backend/data/normalized/.gitkeep
+
+# Empty lockfile at repository root; the real lockfile is frontend/package-lock.json
+/package-lock.json

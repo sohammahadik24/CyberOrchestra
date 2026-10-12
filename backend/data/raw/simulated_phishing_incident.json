@@ -1,0 +1,35 @@
+{
+  "incident_id": "INC-SIM-002",
+  "incident_type": "phishing_campaign",
+  "description": "Suspicious email delivery containing a credential harvesting link.",
+  "severity": "high",
+  "source": "simulated_email_gateway",
+  "timestamp": "2026-09-30T11:00:00Z",
+  "indicators": [
+    {
+      "type": "URL",
+      "value": "https://auth-notice.example.com/login-verify",
+      "source": "simulated_email_gateway",
+      "confidence": 0.90
+    },
+    {
+      "type": "domain",
+      "value": "auth-notice.example.com",
+      "source": "simulated_dns_telemetry"
+    },
+    {
+      "type": "mitre_technique",
+      "value": "T1566.002",
+      "source": "simulated_siem"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EVID-002",
+      "evidence_type": "observation",
+      "source": "simulated_email_gateway",
+      "description": "Inbound SMTP message flagged for domain impersonation and suspicious URL structure.",
+      "raw_reference": "mail-msg-id://simulated-mail-srv/msg-99218"
+    }
+  ]
+}

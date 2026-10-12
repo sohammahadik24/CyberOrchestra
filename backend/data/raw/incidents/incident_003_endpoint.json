@@ -1,0 +1,55 @@
+{
+  "incident_id": "INC-003-EP",
+  "timestamp": "2026-09-30T11:15:00Z",
+  "incident_type": "endpoint_malware_alert",
+  "description": "Endpoint security sensor flagged an unauthorized binary execution in a temporary user directory attempting process injection.",
+  "severity": "high",
+  "source": "simulated_edr_agent",
+  "indicators": [
+    {
+      "type": "sha256",
+      "value": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "simulated_edr_agent",
+      "confidence": 0.95,
+      "file_name": "patch_installer.exe",
+      "staged_path": "C:\\Users\\analyst\\AppData\\Local\\Temp\\patch_installer.exe"
+    },
+    {
+      "type": "malware",
+      "value": "SimulatedTestAgent.Dropper",
+      "source": "simulated_edr_agent",
+      "confidence": 0.90,
+      "classification": "simulated_test_heuristic"
+    },
+    {
+      "type": "cve",
+      "value": "CVE-2026-10001",
+      "source": "simulated_vulnerability_catalog",
+      "confidence": 0.70,
+      "notes": "Hypothetical local privilege escalation vector referenced by heuristic tag"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EVID-EP-001",
+      "evidence_type": "system_log",
+      "source": "simulated_edr_agent",
+      "description": "Process patch_installer.exe (PID 28419) spawned from explorer.exe and attempted OpenProcess write rights on svchost.exe.",
+      "raw_reference": "edr-event://host-ep-091/proc/28419",
+      "confidence": 0.94,
+      "target_host": "host-ep-091.corp.example.com",
+      "parent_process": "explorer.exe",
+      "action_taken": "BLOCKED_AND_TERMINATED"
+    },
+    {
+      "evidence_id": "EVID-EP-002",
+      "evidence_type": "file_sample",
+      "source": "simulated_edr_sandbox",
+      "description": "Static structural analysis of quarantined executable reported high entropy and simulated anti-debugging code signatures.",
+      "raw_reference": "sandbox-ref://quarantine-vault/sample-88319",
+      "confidence": 0.89,
+      "file_size_bytes": 1048576,
+      "entropy": 7.82
+    }
+  ]
+}

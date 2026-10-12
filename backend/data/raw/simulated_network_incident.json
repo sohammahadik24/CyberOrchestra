@@ -1,0 +1,28 @@
+{
+  "incident_id": "INC-SIM-001",
+  "incident_type": "suspicious_network_activity",
+  "description": "Repeated anomalous outbound TCP connection attempts to an unclassified external IP address.",
+  "severity": "medium",
+  "source": "simulated_firewall",
+  "timestamp": "2026-09-30T10:15:30Z",
+  "indicators": [
+    {
+      "type": "IPv4",
+      "value": "203.0.113.10",
+      "source": "simulated_firewall",
+      "confidence": 0.85,
+      "destination_port": 8443,
+      "protocol": "TCP"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EVID-001",
+      "evidence_type": "network_log",
+      "source": "simulated_firewall",
+      "description": "5 consecutive connection attempts within 60 seconds rejected by egress filter",
+      "raw_reference": "log-ref://fw-edge-01/entry/84210",
+      "confidence": 0.95
+    }
+  ]
+}

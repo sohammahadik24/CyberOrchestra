@@ -1,0 +1,56 @@
+{
+  "incident_id": "INC-002-PHISH",
+  "timestamp": "2026-09-30T10:30:00Z",
+  "incident_type": "phishing_email",
+  "description": "Employee reported receiving an unexpected urgent email claiming to be an IT security verification notice with an embedded link directing to an external authentication portal.",
+  "severity": "high",
+  "source": "simulated_mail_gateway",
+  "indicators": [
+    {
+      "type": "url",
+      "value": "https://auth-verify.example.org/session/login",
+      "source": "simulated_mail_gateway",
+      "confidence": 0.92,
+      "category": "credential_harvesting_candidate"
+    },
+    {
+      "type": "domain",
+      "value": "auth-verify.example.org",
+      "source": "simulated_mail_gateway",
+      "confidence": 0.90,
+      "tld": "org"
+    },
+    {
+      "type": "mitre_technique",
+      "value": "T1566.002",
+      "source": "simulated_siem",
+      "confidence": 0.85,
+      "technique_name": "Phishing: Spearphishing Link"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EVID-PHISH-001",
+      "evidence_type": "observation",
+      "source": "simulated_mail_gateway",
+      "description": "Inbound email with subject 'URGENT: Verify Your Corporate SSO Credentials' received from external sender spoof-alert@example.net targeting employee.user@corp.example.com.",
+      "raw_reference": "msg-store://mail-gw-01/quarantine/msg-401928",
+      "confidence": 0.95,
+      "sender": "spoof-alert@example.net",
+      "recipient": "employee.user@corp.example.com",
+      "subject": "URGENT: Verify Your Corporate SSO Credentials",
+      "spf_verdict": "FAIL",
+      "dkim_verdict": "NONE"
+    },
+    {
+      "evidence_id": "EVID-PHISH-002",
+      "evidence_type": "network_log",
+      "source": "simulated_web_proxy",
+      "description": "Corporate proxy intercepted and blocked outbound HTTP GET request to auth-verify.example.org due to newly observed domain heuristic.",
+      "raw_reference": "proxy-log://web-proxy-02/access/req-99182",
+      "confidence": 0.88,
+      "http_status": 403,
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) SimulatedBrowser/1.0"
+    }
+  ]
+}

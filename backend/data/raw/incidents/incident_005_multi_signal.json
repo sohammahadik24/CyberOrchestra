@@ -1,0 +1,108 @@
+{
+  "incident_id": "INC-005-MULTI",
+  "timestamp": "2026-09-30T12:00:00Z",
+  "incident_type": "multi_signal_correlated_incident",
+  "description": "Correlated multi-stage detection involving external URL retrieval, endpoint script execution, unpatched local software reference, and anomalous outbound network communication.",
+  "severity": "critical",
+  "source": "simulated_siem_correlator",
+  "indicators": [
+    {
+      "type": "url",
+      "value": "https://telemetry-update.example.net/client_updater.bin",
+      "source": "simulated_web_proxy",
+      "confidence": 0.91,
+      "fqdn": "telemetry-update.example.net"
+    },
+    {
+      "type": "domain",
+      "value": "telemetry-update.example.net",
+      "source": "simulated_web_proxy",
+      "confidence": 0.90
+    },
+    {
+      "type": "sha256",
+      "value": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+      "source": "simulated_edr_sensor",
+      "confidence": 0.94,
+      "staged_path": "C:\\Users\\finance.analyst\\AppData\\Local\\Temp\\client_updater.bin"
+    },
+    {
+      "type": "ipv4",
+      "value": "198.51.100.88",
+      "source": "simulated_perimeter_firewall",
+      "confidence": 0.89,
+      "port": 9001,
+      "protocol": "TCP"
+    },
+    {
+      "type": "cve",
+      "value": "CVE-2026-30003",
+      "source": "simulated_asset_inventory",
+      "confidence": 0.80,
+      "affected_component": "SimulatedHelperTool v1.1.0"
+    },
+    {
+      "type": "mitre_technique",
+      "value": "T1071.001",
+      "source": "simulated_siem_correlator",
+      "confidence": 0.85,
+      "technique_name": "Application Layer Protocol: Web Protocols"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EVID-MULTI-001",
+      "evidence_type": "network_log",
+      "source": "simulated_web_proxy",
+      "description": "Workstation ws-finance-09 (192.0.2.105) issued HTTP GET to https://telemetry-update.example.net/client_updater.bin returning 200 OK with payload stream.",
+      "raw_reference": "proxy://access.log/line/88129",
+      "confidence": 0.95,
+      "host": "ws-finance-09.corp.example.com",
+      "client_ip": "192.0.2.105",
+      "http_status": 200
+    },
+    {
+      "evidence_id": "EVID-MULTI-002",
+      "evidence_type": "system_log",
+      "source": "simulated_edr_sensor",
+      "description": "EDR alert on ws-finance-09: client_updater.bin invoked powershell.exe with -NonInteractive -ExecutionPolicy Bypass flags.",
+      "raw_reference": "edr-alert://ws-finance-09/alert-6610",
+      "confidence": 0.96,
+      "process_id": 8912,
+      "parent_process": "client_updater.bin",
+      "command_line": "powershell.exe -NonInteractive -ExecutionPolicy Bypass -File stub.ps1"
+    },
+    {
+      "evidence_id": "EVID-MULTI-003",
+      "evidence_type": "network_log",
+      "source": "simulated_perimeter_firewall",
+      "description": "Perimeter firewall dropped multiple SYN packets from 192.0.2.105 directed to 198.51.100.88:9001.",
+      "raw_reference": "syslog://fw-edge-01/filter/deny-44819",
+      "confidence": 0.94,
+      "src_ip": "192.0.2.105",
+      "dst_ip": "198.51.100.88",
+      "dst_port": 9001,
+      "action": "DROP"
+    },
+    {
+      "evidence_id": "EVID-MULTI-004",
+      "evidence_type": "vulnerability_report",
+      "source": "simulated_asset_inventory",
+      "description": "Host ws-finance-09 reports installed package SimulatedHelperTool v1.1.0 linked to unpatched advisory CVE-2026-30003. Passive version audit record only; exploitability not verified.",
+      "raw_reference": "inventory://ws-finance-09/sw/finding-901",
+      "confidence": 0.85,
+      "software_name": "SimulatedHelperTool",
+      "installed_version": "1.1.0"
+    },
+    {
+      "evidence_id": "EVID-MULTI-005",
+      "evidence_type": "authentication_log",
+      "source": "simulated_domain_controller",
+      "description": "Kerberos service ticket request generated for finance.analyst from unexpected internal workstation segment.",
+      "raw_reference": "ad-event://dc01.corp.example.com/sec/4769",
+      "confidence": 0.87,
+      "service_name": "krbtgt",
+      "account_name": "finance.analyst"
+    }
+  ]
+}

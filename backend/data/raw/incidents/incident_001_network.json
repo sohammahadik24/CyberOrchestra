@@ -1,0 +1,43 @@
+{
+  "incident_id": "INC-001-NET",
+  "timestamp": "2026-09-30T10:15:00Z",
+  "incident_type": "suspicious_network_activity",
+  "description": "Multiple outbound connections from internal workstation ws-eng-042 to unclassified external IP address 203.0.113.45 over non-standard port 8443.",
+  "severity": "medium",
+  "source": "simulated_perimeter_firewall",
+  "indicators": [
+    {
+      "type": "ipv4",
+      "value": "203.0.113.45",
+      "source": "simulated_perimeter_firewall",
+      "confidence": 0.85,
+      "destination_port": 8443,
+      "protocol": "TCP",
+      "source_workstation": "ws-eng-042.corp.example.com",
+      "source_ip": "192.0.2.142"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EVID-NET-001",
+      "evidence_type": "network_log",
+      "source": "simulated_perimeter_firewall",
+      "description": "Firewall blocked 18 outbound connection attempts from 192.0.2.142 to 203.0.113.45:8443 within a 5-minute window.",
+      "raw_reference": "syslog://fw-edge-01.simulated/filter/conn-772910",
+      "confidence": 0.95,
+      "rule_id": "EGRESS-DEFAULT-RESTRICT",
+      "action": "DENY"
+    },
+    {
+      "evidence_id": "EVID-NET-002",
+      "evidence_type": "system_log",
+      "source": "simulated_host_telemetry",
+      "description": "Workstation ws-eng-042 initiated socket connection calls to external IP 203.0.113.45 via background sync process.",
+      "raw_reference": "win-event://ws-eng-042/security/5156-socket-open",
+      "confidence": 0.90,
+      "process_name": "background_sync.exe",
+      "process_id": 4108,
+      "user_context": "LOCAL_SYSTEM"
+    }
+  ]
+}
