@@ -7,15 +7,15 @@ Threat Intel / CVE / Incident Logs
        ↓
 Threat Detection Agent (Groq openai/gpt-oss-120b)
        ↓
-Malware Analysis (openai/gpt-oss-120b) + Log Analysis (qwen/qwen3-32b) + Vuln. Assessment (qwen/qwen3-32b)
+Malware Analysis (openai/gpt-oss-120b) + Log Analysis (qwen/qwen3.8-27b) + Vuln. Assessment (qwen/qwen3.8-27b)
        ↓
 Shared Incident State
        ↓
-Recovery Planning Agent (Groq qwen/qwen3-32b)
+Recovery Planning Agent (Groq qwen/qwen3.8-27b)
        ↓
 Deterministic Policy Engine (PE-001..PE-004)
        ↓
-Report Generation Agent (Groq qwen/qwen3-32b)
+Report Generation Agent (Groq qwen/qwen3.8-27b)
        ↓
 Human Analyst Review
 """
@@ -45,7 +45,7 @@ from app.models.incident_report import (
 from app.models.incident_state import IncidentState
 from app.models.log_assessment import LogAssessment, LogFinding, LogSeverity
 from app.models.malware_assessment import MalwareAssessment
-from app.models.policy_decision import PolicyDecision
+from app.models.policy_decision import PolicyDecision, PolicyDecisionValue
 from app.models.recovery_plan import ActionPriority, RecoveryAction, RecoveryPlan
 from app.models.threat_assessment import ThreatAssessment, ThreatClassification, ThreatSeverity
 from app.models.vulnerability_assessment import VulnerabilityAssessment, VulnerabilitySeverity
@@ -390,7 +390,7 @@ class PipelineOrchestrator:
             "details": f"Aggregated {len(state.aggregated_evidence_ids)} validated evidence citations across {len(state.results())} agent assessments.",
         })
 
-        # Step 6: Recovery Planning Agent (qwen/qwen3-32b)
+        # Step 6: Recovery Planning Agent (qwen/qwen3.8-27b)
         stage6_start = time.time()
         record.update_stage("Recovery Planning", "Investigating")
         recovery_plan: Optional[RecoveryPlan] = None
@@ -406,13 +406,14 @@ class PipelineOrchestrator:
                     "details": f"Proposed {len(recovery_plan.recovery_actions)} structured recovery actions.",
                 })
             except Exception as err:
+                recovery_plan = self._create_grounded_recovery_plan(state)
                 stages_log.append({
                     "stage": "Recovery Planning Agent",
                     "role": "Containment & Remediation Strategy",
-                    "status": "error",
-                    "model": f"Groq {settings.RECOVERY_LLM_MODEL}",
+                    "status": "completed",
+                    "model": f"Groq {settings.RECOVERY_LLM_MODEL} (Fallback)",
                     "duration": f"{time.time() - stage6_start:.2f}s",
-                    "details": str(err),
+                    "details": f"Proposed {len(recovery_plan.recovery_actions)} actions (deterministic fallback: {err}).",
                 })
         else:
             recovery_plan = self._create_grounded_recovery_plan(state)
@@ -435,9 +436,9 @@ class PipelineOrchestrator:
             policy_decisions = policy_engine.evaluate(recovery_plan, state)
             record.policy_reviews = [PolicyReviewRecord(dec) for dec in policy_decisions]
 
-            approved_count = sum(1 for d in policy_decisions if d.decision.value == "approved")
-            pending_count = sum(1 for d in policy_decisions if d.decision.value == "requires_approval")
-            rejected_count = sum(1 for d in policy_decisions if d.decision.value == "rejected")
+            approved_count = sum(1 for d in policy_decisions if d.decision == PolicyDecisionValue.APPROVED)
+            pending_count = sum(1 for d in policy_decisions if d.decision == PolicyDecisionValue.REQUIRES_APPROVAL)
+            rejected_count = sum(1 for d in policy_decisions if d.decision == PolicyDecisionValue.REJECTED)
 
             stages_log.append({
                 "stage": "Deterministic Policy Engine",
@@ -454,11 +455,11 @@ class PipelineOrchestrator:
                 severity="High" if pending_count > 0 else "Info",
             )
 
-        # Step 8: Report Generation Agent (qwen/qwen3-32b)
+        # Step 8: Report Generation Agent (qwen/qwen3.8-27b)
         stage8_start = time.time()
         record.update_stage("Report Generation", "Reporting")
         report: Optional[IncidentReport] = None
-        if recovery_plan and policy_decisions:
+        if recovery_plan is not None:
             if has_groq_key:
                 try:
                     report = self.report_agent.generate(state, recovery_plan, policy_decisions)
@@ -471,13 +472,14 @@ class PipelineOrchestrator:
                         "details": f"Generated comprehensive report with {len(report.findings)} verified findings.",
                     })
                 except Exception as err:
+                    report = self._create_grounded_report(state, recovery_plan, policy_decisions)
                     stages_log.append({
                         "stage": "Report Generation Agent",
                         "role": "Executive & Technical Reporting",
-                        "status": "error",
-                        "model": f"Groq {settings.REPORT_LLM_MODEL}",
+                        "status": "completed",
+                        "model": f"Groq {settings.REPORT_LLM_MODEL} (Fallback)",
                         "duration": f"{time.time() - stage8_start:.2f}s",
-                        "details": str(err),
+                        "details": f"Synthesized incident report with {len(report.findings)} findings (fallback: {err}).",
                     })
             else:
                 report = self._create_grounded_report(state, recovery_plan, policy_decisions)

@@ -45,7 +45,7 @@ class Settings:
 
     # Threat Detection Agent Groq profile; uses the shared LLMService adapter.
     THREAT_LLM_PROVIDER: str = os.getenv("THREAT_LLM_PROVIDER", "groq")
-    THREAT_LLM_MODEL: str = os.getenv("THREAT_LLM_MODEL", "openai/gpt-oss-120b")
+    THREAT_LLM_MODEL: str = os.getenv("THREAT_LLM_MODEL", "qwen/qwen3.8-27b")
     THREAT_LLM_API_KEY: Optional[str] = os.getenv("GROQ_API_KEY")
     THREAT_LLM_BASE_URL: str = os.getenv(
         "GROQ_BASE_URL", "https://api.groq.com/openai/v1"
@@ -54,7 +54,7 @@ class Settings:
     # Malware Analysis Agent Groq profile; uses the shared LLMService adapter.
     MALWARE_LLM_PROVIDER: str = os.getenv("MALWARE_LLM_PROVIDER", "groq")
     MALWARE_LLM_MODEL: str = os.getenv(
-        "MALWARE_LLM_MODEL", os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
+        "MALWARE_LLM_MODEL", os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b")
     )
     MALWARE_LLM_API_KEY: Optional[str] = os.getenv("GROQ_API_KEY")
     MALWARE_LLM_BASE_URL: str = os.getenv(
@@ -64,7 +64,7 @@ class Settings:
     # Log Analysis Agent Groq profile; independent from other agent profiles.
     LOG_LLM_PROVIDER: str = os.getenv("LOG_LLM_PROVIDER", "groq")
     LOG_LLM_MODEL: str = os.getenv(
-        "LOG_LLM_MODEL", os.getenv("GROQ_LOG_MODEL", "qwen/qwen3-32b")
+        "LOG_LLM_MODEL", os.getenv("GROQ_LOG_MODEL", "qwen/qwen3.8-27b")
     )
     LOG_LLM_API_KEY: Optional[str] = os.getenv("GROQ_API_KEY")
     LOG_LLM_BASE_URL: str = os.getenv(
@@ -74,7 +74,7 @@ class Settings:
     # Vulnerability Assessment Agent Groq profile; uses the shared LLMService adapter.
     VULNERABILITY_LLM_PROVIDER: str = os.getenv("VULNERABILITY_LLM_PROVIDER", "groq")
     VULNERABILITY_LLM_MODEL: str = os.getenv(
-        "VULNERABILITY_LLM_MODEL", "qwen/qwen3-32b"
+        "VULNERABILITY_LLM_MODEL", "qwen/qwen3.8-27b"
     )
     VULNERABILITY_LLM_API_KEY: Optional[str] = os.getenv("GROQ_API_KEY")
     VULNERABILITY_LLM_BASE_URL: str = os.getenv(
@@ -83,7 +83,7 @@ class Settings:
 
     # Recovery Planning Agent Groq profile; uses the shared LLMService adapter.
     RECOVERY_LLM_PROVIDER: str = os.getenv("RECOVERY_LLM_PROVIDER", "groq")
-    RECOVERY_LLM_MODEL: str = os.getenv("RECOVERY_LLM_MODEL", "qwen/qwen3-32b")
+    RECOVERY_LLM_MODEL: str = os.getenv("RECOVERY_LLM_MODEL", "qwen/qwen3.8-27b")
     RECOVERY_LLM_API_KEY: Optional[str] = os.getenv("GROQ_API_KEY")
     RECOVERY_LLM_BASE_URL: str = os.getenv(
         "GROQ_BASE_URL", "https://api.groq.com/openai/v1"
@@ -91,7 +91,7 @@ class Settings:
 
     # Report Generation Agent Groq profile; uses the shared LLMService adapter.
     REPORT_LLM_PROVIDER: str = os.getenv("REPORT_LLM_PROVIDER", "groq")
-    REPORT_LLM_MODEL: str = os.getenv("REPORT_LLM_MODEL", "qwen/qwen3-32b")
+    REPORT_LLM_MODEL: str = os.getenv("REPORT_LLM_MODEL", "qwen/qwen3.8-27b")
     REPORT_LLM_API_KEY: Optional[str] = os.getenv("GROQ_API_KEY")
     REPORT_LLM_BASE_URL: str = os.getenv(
         "GROQ_BASE_URL", "https://api.groq.com/openai/v1"

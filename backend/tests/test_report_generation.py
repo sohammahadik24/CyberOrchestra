@@ -5,6 +5,7 @@ from unittest.mock import Mock
 
 import pytest
 
+from app.core.config import settings
 from app.agents.report_generation import ReportGenerationAgent, ReportGenerationError
 from app.models.incident import Evidence, Incident
 from app.models.incident_state import IncidentState
@@ -92,7 +93,7 @@ def test_generates_structured_report_from_all_inputs_and_uses_expected_model():
     assert request["shared_incident_state"]["incident_id"] == state.incident_id
     assert request["recovery_plan"]["incident_id"] == state.incident_id
     assert llm.generate.call_args.kwargs["provider"] == "groq"
-    assert llm.generate.call_args.kwargs["model"] == "qwen/qwen3-32b"
+    assert llm.generate.call_args.kwargs["model"] == settings.REPORT_LLM_MODEL
 
 
 def test_policy_decisions_must_be_reproduced_exactly():

@@ -58,7 +58,7 @@ export const ReportsPage: React.FC = () => {
     <>
       <Header
         pageTitle="Incident Reports"
-        pageSubtitle="Synthesized reports from Report Generation Agent (Groq qwen3-32b) with full evidence grounding"
+        pageSubtitle="Synthesized reports from Report Generation Agent (Groq qwen3.8-27b) with full evidence grounding"
         rightContent={
           <button
             onClick={() => fetchReports()}

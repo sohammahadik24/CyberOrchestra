@@ -238,32 +238,34 @@ export const EvaluationPage: React.FC = () => {
             >
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={comparisonChartData} margin={{ top: 10, right: 10, left: -20, bottom: 40 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis
                     dataKey="metric"
-                    tick={{ fontSize: 10, fill: 'var(--text-muted)' }}
-                    axisLine={false}
-                    tickLine={false}
+                    tick={{ fontSize: 10, fill: 'var(--text-secondary)' }}
+                    axisLine={{ stroke: '#cbd5e1' }}
+                    tickLine={{ stroke: '#cbd5e1' }}
                     angle={-25}
                     textAnchor="end"
                     interval={0}
                   />
                   <YAxis
-                    tick={{ fontSize: 10, fill: 'var(--text-muted)' }}
-                    axisLine={false}
-                    tickLine={false}
+                    tick={{ fontSize: 10, fill: 'var(--text-secondary)' }}
+                    axisLine={{ stroke: '#cbd5e1' }}
+                    tickLine={{ stroke: '#cbd5e1' }}
                     domain={[0, 100]}
                   />
                   <Tooltip
                     contentStyle={{
-                      background: 'var(--bg-elevated)',
-                      border: '1px solid var(--border-default)',
+                      background: '#ffffff',
+                      border: '1px solid #cbd5e1',
                       borderRadius: '8px',
                       fontSize: '12px',
+                      color: 'var(--text-primary)',
+                      boxShadow: '0 4px 12px rgba(15,23,42,0.08)',
                     }}
                   />
-                  <Bar dataKey="MultiAgent" fill="var(--cyan-400)" name="CyberOrchestra" radius={[3, 3, 0, 0]} />
-                  <Bar dataKey="Baseline" fill="var(--text-muted)" name="Single-LLM Baseline" radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="MultiAgent" fill="#1d4ed8" name="CyberOrchestra" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="Baseline" fill="#94a3b8" name="Single-LLM Baseline" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </Panel>
@@ -271,9 +273,9 @@ export const EvaluationPage: React.FC = () => {
             <Panel title="Ablation & System Competencies" subtitle="Multi-dimensional capability coverage">
               <ResponsiveContainer width="100%" height={280}>
                 <RadarChart data={radarData}>
-                  <PolarGrid stroke="rgba(255,255,255,0.06)" />
-                  <PolarAngleAxis dataKey="metric" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
-                  <Radar name="CyberOrchestra" dataKey="score" stroke="var(--cyan-400)" fill="var(--cyan-400)" fillOpacity={0.2} />
+                  <PolarGrid stroke="#e2e8f0" />
+                  <PolarAngleAxis dataKey="metric" tick={{ fontSize: 11, fill: 'var(--text-secondary)' }} />
+                  <Radar name="CyberOrchestra" dataKey="score" stroke="#1d4ed8" fill="#1d4ed8" fillOpacity={0.2} />
                 </RadarChart>
               </ResponsiveContainer>
             </Panel>

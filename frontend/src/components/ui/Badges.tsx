@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Severity } from '../../services/mockData';
+import type { Severity } from '../../types';
 
 interface SeverityBadgeProps {
   severity: Severity | string;

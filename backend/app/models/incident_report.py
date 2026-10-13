@@ -53,3 +53,14 @@ class IncidentReport(BaseModel):
     final_risk_level: FinalRiskLevel
 
     model_config = ConfigDict(extra="forbid")
+
+    @property
+    def findings(self) -> List[ReportFinding]:
+        items: List[ReportFinding] = []
+        if getattr(self, "executive_summary", None):
+            items.append(self.executive_summary)
+        items.extend(self.threat_assessment)
+        items.extend(self.malware_findings)
+        items.extend(self.log_findings)
+        items.extend(self.vulnerability_findings)
+        return items

@@ -1,6 +1,7 @@
 """Reusable, configurable service for an OpenAI-compatible cloud LLM endpoint."""
 
 import json
+import time
 from typing import Any, Dict, Optional, Type
 
 import httpx
@@ -111,17 +112,39 @@ class LLMService:
                 "json_schema": {"name": "threat_assessment", "strict": True, "schema": schema},
             },
         }
-        try:
-            with httpx.Client(timeout=self.timeout, transport=self.transport) as client:
-                response = client.post(
-                    url,
-                    headers={"Authorization": f"Bearer {active_api_key}", "Content-Type": "application/json"},
-                    json=body,
-                )
-        except httpx.RequestError as err:
-            raise LLMConnectionError(f"LLM request failed: {err}") from err
+        max_retries = 5
+        response = None
+        for attempt in range(max_retries):
+            try:
+                with httpx.Client(timeout=self.timeout, transport=self.transport) as client:
+                    response = client.post(
+                        url,
+                        headers={"Authorization": f"Bearer {active_api_key}", "Content-Type": "application/json"},
+                        json=body,
+                    )
+            except httpx.RequestError as err:
+                if attempt == max_retries - 1:
+                    raise LLMConnectionError(f"LLM request failed: {err}") from err
+                time.sleep(1.0)
+                continue
+
+            if response.status_code == 429 and attempt < max_retries - 1:
+                reset_str = response.headers.get("retry-after") or response.headers.get("x-ratelimit-reset-tokens")
+                retry_wait = (attempt + 1) * 3.0
+                if reset_str:
+                    try:
+                        clean_str = reset_str.rstrip("s").strip()
+                        retry_wait = float(clean_str) + 0.5
+                    except (ValueError, TypeError):
+                        pass
+                time.sleep(min(max(retry_wait, 2.0), 15.0))
+                continue
+            break
+
+        if response is None:
+            raise LLMConnectionError("LLM request produced no response.")
         if response.status_code < 200 or response.status_code >= 300:
-            raise LLMResponseError(f"LLM endpoint returned HTTP {response.status_code}.")
+            raise LLMResponseError(f"LLM endpoint returned HTTP {response.status_code}: {response.text}")
         try:
             payload = response.json()
             content = payload["choices"][0]["message"]["content"]

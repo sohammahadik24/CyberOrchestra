@@ -3,12 +3,12 @@ import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   ShieldAlert,
+  PlusCircle,
   Activity,
   Globe,
   RefreshCw,
   FileText,
   BarChart2,
-  ChevronRight,
 } from 'lucide-react';
 
 interface NavItem {
@@ -20,13 +20,14 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { path: '/',                  label: 'Dashboard',             icon: <LayoutDashboard size={16} /> },
-  { path: '/incidents',         label: 'Incidents',             icon: <ShieldAlert size={16} /> },
-  { path: '/agent-monitor',     label: 'Agents',                icon: <Activity size={16} /> },
-  { path: '/threat-intelligence', label: 'Threat Lookup',       icon: <Globe size={16} /> },
-  { path: '/recovery-policy',   label: 'Recovery & Policy',     icon: <RefreshCw size={16} /> },
-  { path: '/reports',           label: 'Reports',               icon: <FileText size={16} /> },
-  { path: '/evaluation',        label: 'Evaluation',            icon: <BarChart2 size={16} /> },
+  { path: '/',                    label: 'Overview',              icon: <LayoutDashboard size={17} /> },
+  { path: '/incidents',           label: 'Investigations',        icon: <ShieldAlert size={17} /> },
+  { path: '/incidents/new',       label: 'New Investigation',     icon: <PlusCircle size={17} /> },
+  { path: '/agent-monitor',       label: 'Agent Monitor',         icon: <Activity size={17} /> },
+  { path: '/threat-intelligence', label: 'Threat Intelligence',   icon: <Globe size={17} /> },
+  { path: '/recovery-policy',     label: 'Recovery & Policy',     icon: <RefreshCw size={17} /> },
+  { path: '/reports',             label: 'Reports',               icon: <FileText size={17} /> },
+  { path: '/evaluation',          label: 'Evaluation',            icon: <BarChart2 size={17} /> },
 ];
 
 export const Sidebar: React.FC = () => {
@@ -52,46 +53,43 @@ export const Sidebar: React.FC = () => {
       {/* ── Logo / Brand ─────────────────────────── */}
       <div
         style={{
-          padding: '0 20px',
+          padding: '0 18px',
           height: 'var(--header-height)',
           display: 'flex',
           alignItems: 'center',
-          gap: '10px',
+          gap: '12px',
           borderBottom: '1px solid var(--sidebar-border)',
           flexShrink: 0,
         }}
       >
-        {/* Hex icon */}
+        {/* Brand Icon */}
         <div
           style={{
-            width: 32,
-            height: 32,
-            background: 'linear-gradient(135deg, var(--cyan-700), var(--blue-700))',
-            borderRadius: '8px',
+            width: 34,
+            height: 34,
+            background: 'var(--blue-glow)',
+            border: '1px solid var(--blue-border)',
+            borderRadius: '9px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
-            boxShadow: '0 0 12px rgba(6,182,212,0.3)',
           }}
         >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path
-              d="M8 1L14 4.5V11.5L8 15L2 11.5V4.5L8 1Z"
-              stroke="white"
-              strokeWidth="1.2"
-              strokeLinejoin="round"
-              fill="none"
-            />
-            <circle cx="8" cy="8" r="2" fill="white" />
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue-600)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="9" y="3" width="6" height="6" rx="1.5" />
+            <rect x="3" y="15" width="6" height="6" rx="1.5" />
+            <rect x="15" y="15" width="6" height="6" rx="1.5" />
+            <path d="M12 9v3" />
+            <path d="M6 15v-1a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1" />
           </svg>
         </div>
         <div>
-          <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.2 }}>
+          <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.2 }}>
             CyberOrchestra
           </div>
-          <div style={{ fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-            SOC Platform
+          <div style={{ fontSize: '9px', color: 'var(--text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>
+            Security Operations
           </div>
         </div>
       </div>
@@ -101,46 +99,46 @@ export const Sidebar: React.FC = () => {
         style={{
           padding: '20px 20px 8px',
           fontSize: '10px',
-          fontWeight: 600,
+          fontWeight: 700,
           color: 'var(--text-muted)',
-          letterSpacing: '0.10em',
+          letterSpacing: '0.12em',
           textTransform: 'uppercase',
         }}
       >
-        Navigation
+        Workspace
       </div>
 
       {/* ── Nav Items ─────────────────────────────── */}
-      <nav style={{ flex: 1, padding: '0 10px' }}>
+      <nav style={{ flex: 1, padding: '0 12px' }}>
         {navItems.map(item => {
           const isActive =
             item.path === '/'
               ? location.pathname === '/'
-              : location.pathname.startsWith(item.path);
+              : item.path === '/incidents'
+                ? location.pathname === '/incidents'
+                : location.pathname.startsWith(item.path);
 
           return (
             <NavLink
               key={item.path}
               to={item.path}
-              style={{ textDecoration: 'none', display: 'block', marginBottom: '2px' }}
+              style={{ textDecoration: 'none', display: 'block', marginBottom: '4px' }}
             >
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  padding: '9px 10px',
-                  borderRadius: 'var(--radius-md)',
-                  background: isActive
-                    ? 'linear-gradient(90deg, rgba(6,182,212,0.12), rgba(59,130,246,0.08))'
-                    : 'transparent',
-                  border: isActive ? '1px solid rgba(6,182,212,0.20)' : '1px solid transparent',
+                  padding: '9px 12px',
+                  borderRadius: '8px',
+                  background: isActive ? '#dbeafe' : 'transparent',
+                  border: isActive ? '1px solid rgba(59, 130, 246, 0.22)' : '1px solid transparent',
                   transition: 'all var(--transition-fast)',
                   cursor: 'pointer',
                 }}
                 onMouseEnter={e => {
                   if (!isActive) {
-                    (e.currentTarget as HTMLElement).style.background = 'var(--bg-hover)';
+                    (e.currentTarget as HTMLElement).style.background = 'rgba(219, 234, 254, 0.45)';
                   }
                 }}
                 onMouseLeave={e => {
@@ -149,15 +147,22 @@ export const Sidebar: React.FC = () => {
                   }
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span style={{ color: isActive ? 'var(--cyan-400)' : 'var(--text-muted)', flexShrink: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '11px' }}>
+                  <span
+                    style={{
+                      color: isActive ? 'var(--blue-600)' : 'var(--text-muted)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
                     {item.icon}
                   </span>
                   <span
                     style={{
                       fontSize: '13px',
-                      fontWeight: isActive ? 600 : 400,
-                      color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                      fontWeight: isActive ? 600 : 500,
+                      color: isActive ? 'var(--blue-700)' : 'var(--text-secondary)',
                     }}
                   >
                     {item.label}
@@ -183,7 +188,15 @@ export const Sidebar: React.FC = () => {
                     </span>
                   )}
                   {isActive && (
-                    <ChevronRight size={12} style={{ color: 'var(--cyan-400)' }} />
+                    <div
+                      style={{
+                        width: 6,
+                        height: 6,
+                        borderRadius: '50%',
+                        background: 'var(--blue-600)',
+                        flexShrink: 0,
+                      }}
+                    />
                   )}
                 </div>
               </div>
@@ -192,37 +205,17 @@ export const Sidebar: React.FC = () => {
         })}
       </nav>
 
-      {/* ── Footer / Pipeline info ─────────────────── */}
-      <div style={{ padding: '16px 20px', borderTop: '1px solid var(--sidebar-border)', color: 'var(--text-muted)', fontSize: '12px' }}>
-        College project demonstration
+      {/* ── Footer ─────────────────── */}
+      <div
+        style={{
+          padding: '14px 20px',
+          borderTop: '1px solid var(--sidebar-border)',
+          color: 'var(--text-muted)',
+          fontSize: '11px',
+        }}
+      >
+        Security Operations Center
       </div>
-      {/*
-        {[
-          { label: 'Data Normalizer',     active: false },
-          { label: 'Threat Detection',    active: true  },
-          { label: 'Analysis Agents',     active: true  },
-          { label: 'Shared State',        active: true  },
-          { label: 'Recovery Planning',   active: true  },
-          { label: 'Policy Engine',       active: false },
-          { label: 'Report Generation',   active: true  },
-        ].map((stage, idx) => (
-          <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-            <div
-              style={{
-                width: 5,
-                height: 5,
-                borderRadius: '50%',
-                background: stage.active ? 'var(--cyan-400)' : 'var(--text-disabled)',
-                flexShrink: 0,
-                boxShadow: stage.active ? '0 0 4px var(--cyan-400)' : 'none',
-              }}
-            />
-            <span style={{ fontSize: '11px', color: stage.active ? 'var(--text-secondary)' : 'var(--text-muted)' }}>
-              {stage.label}
-            </span>
-          </div>
-        ))}
-      */}
     </aside>
   );
 };

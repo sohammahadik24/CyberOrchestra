@@ -34,9 +34,16 @@ class ThreatDetectionAgent:
         # Duplicate IDs add no grounding value and can make citations ambiguous.
         evidence_by_id = {item.evidence_id: item for item in supplied}
         grounded_evidence = list(evidence_by_id.values())
+        def _clean_evidence(item: Evidence):
+            data = item.model_dump(mode="json")
+            if "metadata" in data and isinstance(data["metadata"], dict) and "raw" in data["metadata"]:
+                data = dict(data)
+                data["metadata"] = {k: v for k, v in data["metadata"].items() if k != "raw"}
+            return data
+
         request = {
             "incident": incident.model_dump(mode="json"),
-            "external_evidence": [item.model_dump(mode="json") for item in grounded_evidence],
+            "external_evidence": [_clean_evidence(item) for item in grounded_evidence],
             "required_output_schema": ThreatAssessment.model_json_schema(),
         }
         try:

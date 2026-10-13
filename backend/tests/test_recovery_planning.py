@@ -5,6 +5,7 @@ from unittest.mock import Mock
 
 import pytest
 
+from app.core.config import settings
 from app.agents.recovery_planning import RecoveryPlanningAgent, RecoveryPlanningError
 from app.models.incident import Evidence, Incident
 from app.models.incident_state import IncidentState
@@ -65,7 +66,7 @@ def test_plan_is_structured_and_uses_shared_incident_state():
     request = llm.generate.call_args.kwargs["structured_input"]
     assert request["shared_incident_state"]["aggregated_evidence_ids"] == ["E-REC-1"]
     assert llm.generate.call_args.kwargs["provider"] == "groq"
-    assert llm.generate.call_args.kwargs["model"] == "qwen/qwen3-32b"
+    assert llm.generate.call_args.kwargs["model"] == settings.RECOVERY_LLM_MODEL
 
 
 def test_no_evidence_must_not_produce_unsupported_actions():
